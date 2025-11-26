@@ -62,33 +62,3 @@ jobs:
         path: dist/SnakeGame
         retention-days: 30
 
-  create-release:
-    needs: [build-windows, build-macos]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-    - name: Download Windows artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: SnakeGame-Windows
-        path: ./windows
-
-    - name: Download macOS artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: SnakeGame-macOS
-        path: ./macos
-
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: build-${{ github.sha }}
-        name: Snake Game Build
-        draft: false
-        prerelease: false
-        files: |
-          ./windows/SnakeGame.exe
-          ./macos/SnakeGame
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
